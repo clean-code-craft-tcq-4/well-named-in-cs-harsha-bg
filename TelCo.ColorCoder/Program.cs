@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 
@@ -21,19 +22,8 @@ namespace TelCo.ColorCoder
         /// Array of minor colors
         /// </summary>
         private static Color[] colorMapMinor;
-        /// <summary>
-        /// data type defined to hold the two colors of clor pair
-        /// </summary>
-        internal class ColorPair
-        {
-            internal Color majorColor;
-            internal Color minorColor;
-            public override string ToString()
-            {
-                return string.Format("MajorColor:{0}, MinorColor:{1}", majorColor.Name, minorColor.Name);
-            }
-        }
-        /// <summary>
+        
+        /// <summary>        
         /// Static constructor required to initialize static variable
         /// </summary>
         static Program()
@@ -75,7 +65,7 @@ namespace TelCo.ColorCoder
         /// </summary>
         /// <param name="pair">Color pair with major and minor color</param>
         /// <returns></returns>
-        private static int GetPairNumberFromColor(ColorPair pair)
+        public static int GetPairNumberFromColor(ColorPair pair)
         {
             // Find the major color in the array and get the index
             int majorIndex = -1;
@@ -133,15 +123,46 @@ namespace TelCo.ColorCoder
             Debug.Assert(testPair1.majorColor == Color.Violet);
             Debug.Assert(testPair1.minorColor == Color.Green);
 
-            ColorPair testPair2 = new ColorPair() { majorColor = Color.Yellow, minorColor = Color.Green };
-            pairNumber = Program.GetPairNumberFromColor(testPair2);
-            Console.WriteLine("[In]Colors: {0}, [Out] PairNumber: {1}\n", testPair2, pairNumber);
+            ColorPair colorPair = new ColorPair() { majorColor = Color.Yellow, minorColor = Color.Green };
+            pairNumber = Program.GetPairNumberFromColor(colorPair);
+            Console.WriteLine("[In]Colors: {0}, [Out] PairNumber: {1}\n", colorPair, pairNumber);
             Debug.Assert(pairNumber == 18);
 
-            testPair2 = new ColorPair() { majorColor = Color.Red, minorColor = Color.Blue };
-            pairNumber = Program.GetPairNumberFromColor(testPair2);
-            Console.WriteLine("[In]Colors: {0}, [Out] PairNumber: {1}", testPair2, pairNumber);
+            colorPair = new ColorPair() { majorColor = Color.Red, minorColor = Color.Blue };
+            pairNumber = Program.GetPairNumberFromColor(colorPair);
+            Console.WriteLine("[In]Colors: {0}, [Out] PairNumber: {1}", colorPair, pairNumber);
             Debug.Assert(pairNumber == 6);
+            
+            ColorCodeManual();
+        }
+
+        private static void ColorCodeManual()
+        {
+            Console.WriteLine("Color code Manual");
+            ColorPair colorPair;
+            List<PairOfColorCode> lstofpairColorCode = PairOfColorCode.GetColorCodeManual(colorMapMajor, colorMapMinor);
+            int increment = 1;
+            int majorIndex = 0;
+            int minorIndex = 0;
+            foreach (var pairColorCode in lstofpairColorCode)
+            {
+                colorPair = new ColorPair();
+                colorPair.majorColor = pairColorCode.majorColor;
+                colorPair.minorColor = pairColorCode.minorColor;
+                Console.WriteLine("[In]Colors: {0}, [Out] PairNumber: {1}", colorPair, pairColorCode.pairNo);
+                Debug.Assert(colorPair.majorColor == colorMapMajor[majorIndex]);
+                Debug.Assert(colorPair.minorColor == colorMapMinor[minorIndex]);
+                Debug.Assert(pairColorCode.pairNo == increment);
+                if (minorIndex >= colorMapMinor.Length - 1)
+                {
+                    minorIndex = 0;
+                    majorIndex++;
+                    increment++;
+                    continue;
+                }
+                increment++;
+                minorIndex++;
+            }
         }
     }
 }
