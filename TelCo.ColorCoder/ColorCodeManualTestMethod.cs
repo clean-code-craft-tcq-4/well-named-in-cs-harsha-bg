@@ -10,7 +10,7 @@ namespace TelCo.ColorCoder
         {
             Console.WriteLine("Color code Manual");
             ColorPair colorPair;
-            List<ColorCodeManual> lstofpairColorCode = ColorCoder.ColorCodeManual.GetColorCodeManual(ColorMapHolder.colorMapMajor, ColorMapHolder.colorMapMinor);
+            List<ColorCodeManualItem> lstofpairColorCode = ColorCoder.ColorCodeManualItem.GetColorCodeManual(ColorMapHolder.colorMapMajor, ColorMapHolder.colorMapMinor);
             int increment = 1;
             int majorIndex = 0;
             int minorIndex = 0;
@@ -19,7 +19,6 @@ namespace TelCo.ColorCoder
                 colorPair = new ColorPair();
                 colorPair.majorColor = pairColorCode.majorColor;
                 colorPair.minorColor = pairColorCode.minorColor;
-                Console.WriteLine("[In]Colors: {0}, [Out] PairNumber: {1}", colorPair, pairColorCode.pairNo);
                 Debug.Assert(colorPair.majorColor == ColorMapHolder.colorMapMajor[majorIndex]);
                 Debug.Assert(colorPair.minorColor == ColorMapHolder.colorMapMinor[minorIndex]);
                 Debug.Assert(pairColorCode.pairNo == increment);
@@ -33,6 +32,7 @@ namespace TelCo.ColorCoder
                 increment++;
                 minorIndex++;
             }
+            ColorCoder.ColorCodeManualItem.printReferenceManual(lstofpairColorCode);
         }
     }
 }
